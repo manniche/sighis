@@ -4,7 +4,7 @@ A python cli for github issues
 
 ## Dependencies ##
 
-+ The most approachable [github3.py][https://github.com/sigmavirus24/github3.py] from [Ian Cordasco][http://www.coglib.com/~icordasc/blog/].
++ The most approachable [github3.py](https://github.com/sigmavirus24/github3.py) from [Ian Cordasco](http://www.coglib.com/~icordasc/blog/).
   `pip install github3.py` or roll your own from the repository.
 + python2.7 or better.
 
@@ -16,8 +16,8 @@ Get an auth token from your github account and either put it in `$GITHUB_TOKEN` 
 
 sighis will look for the username of your github account with the following preferences:
 
-1. github.user in `myproject/.git/config` 
-2. $USER
+1. `github.user` in `myproject/.git/config` 
+2. `$USER`
 3. `-u` parameter value to the program
 
 ### Issue lookup heuristics ###
