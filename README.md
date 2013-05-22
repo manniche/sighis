@@ -1,4 +1,6 @@
-# SImple GitHub ISsue cli #
+# sighis (SImple GitHub ISsue cli) #
+
+A python cli for github issues
 
 ## Dependencies ##
 
