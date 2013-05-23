@@ -55,7 +55,14 @@ def __get_user( args ):
             return cp.get( 'github', 'user' )
         except ( ConfigParser.NoSectionError, ConfigParser.NoOptionError ) as e:
             pass
-    return user or os.environ.get( 'GITHUB_USER' ) or args.user
+    user = user or os.environ.get( 'GITHUB_USER' ) or args.user
+
+    if not user:
+        parser.print_help()
+        sys.stderr.write('')
+        sys.exit( 'ERROR: no github username found, please refer to README.md, or try -u' )
+        
+    return user
 
 def __get_token():
     token = None
@@ -67,7 +74,15 @@ def __get_token():
             token = cp.get( 'github', 'token' )
         except ( ConfigParser.NoSectionError, ConfigParser.NoOptionError ) as e:
             pass
-    return token or os.environ.get( 'GITHUB_TOKEN' )
+
+    token = token or os.environ.get( 'GITHUB_TOKEN' )
+
+    if not token: 
+        parser.print_help()
+        sys.stderr.write('')
+        sys.exit( 'ERROR: no github token found, please refer to README.md' )
+
+    return token
 
 def __parse_issue_string( issue_string ):
     """
@@ -93,7 +108,6 @@ def __parse_issue_string( issue_string ):
     ('string', '4--a')
     
     """
-
     try:
         return ( 'number', int( issue_string ) )
     except ValueError:
@@ -106,14 +120,32 @@ def __parse_issue_string( issue_string ):
     if type( issue_string ) is  str:
         return ( 'string', issue_string )
 
-def find_issue( issue_type, lookup ):
-    """
+def auth( user, tkn ):
+    """Authenticates with github
     
     Arguments:
-    - `issue_type`:
-    - `lookup`:
+    - `user`:
+    - `tkn`:
     """
-    pass
+    ghlogin = gh.login( token=tkn )
+    #ghlogin = gh.login( username=user, password='immanuelkant' )
+    #ghlogin.check_authorization( ghlogin.token )
+    #print( dir( ghlogin ) )
+    return ghlogin
+
+def search_issues( ghobj, repos_name, repos_owner, search_string ):
+    """
+    """
+    return ghobj.search_issues( repos_owner, repos_name, 'open', search_string, start_page=0)
+   
+def find_issues( ghobj, owner, repos, numbers ):
+    """
+    """
+    issues = []
+    for n in numbers:
+        issues.append( ghobj.issue( owner, repos, n ) )
+
+    return issues
 
     
 if __name__ == '__main__':
@@ -126,6 +158,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser( description=prg_descr )
     parser.add_argument( '-u', dest='user', type=str, nargs='?',
                          help='GitHub user name. If not provided by github.user or $GITHUB_USER, use this to give the program your github name' )
+    parser.add_argument( dest='command', action='store', type=str,
+                         help='')
     parser.add_argument( dest='issue', action="store", type=str,
                          help='%(prog)s looks in the context of the current project. %(prog)s will try to interpret this argument as a number first, a search string second. Please refer to README.md for a more thorough explanation.' )
     args = parser.parse_args()
@@ -134,18 +168,25 @@ if __name__ == '__main__':
     repos_owner, repos_name = __get_repo().split( '/' )
     user  = __get_user( args )
     token = __get_token()
-
-    if not user:
-        parser.print_help()
-        print('')
-        sys.exit( 'ERROR: no github username found, please refer to README.md, or try -u' )
-        
-    if not token: 
-        parser.print_help()
-        print('')
-        sys.exit( 'ERROR: no github token found, please refer to README.md' )
-        
-    issue = __parse_issue_string( args.issue )
-
-    find_issue( issue[0], issue[1] )
+    lookup= __parse_issue_string( args.issue )
+    ghobj = auth( user, token )
     
+
+    issues = []
+    if lookup[0] is 'number':
+        issues = find_issues( ghobj, repos_owner, repos_name, [ lookup[1] ] )
+    elif lookup[0] is 'range':
+        issues = find_issues( ghobj, repos_owner, repos_name, lookup[1] )
+    elif lookup[0] is 'string':
+        sys.exit( 'searching is currently not supported' )
+        issues = search_issues( ghobj, repos_owner, repos_name, lookup[1] )
+
+    print issues
+    for i in issues:
+        issue = i
+        print( issue.title )
+        print( issue.body )
+        print( issue.comments )
+        print( issue.user )
+        print( issue.to_json() )
+        
