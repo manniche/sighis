@@ -184,12 +184,19 @@ if __name__ == '__main__':
         #sys.exit( 'searching is currently not supported' )
         issues = search_issues( ghobj, repos_owner, repos_name, lookup[1] )
 
-    print issues
+    GREEN = '\033[92m'
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    RESET = '\033[0m'
+    MINW = 6*' '
     for i in issues:
         issue = i
-        print( issue.title )
-        print( issue.body )
-        print( issue.comments )
-        print( issue.user )
-        print( issue.to_json() )
-        
+        # d = dict( issue.to_json() )
+        # print( d.keys() )
+        print( '{0}Issue #{1}{width}{2}'.format( BLUE, RESET, i.number, width=MINW ) )
+        print( '{0}Title{1}: {width}{2}'.format( BLUE, RESET, i.title, width=MINW ) )
+        print( '{0}Description{1}:{width}{2}'.format( BLUE, RESET, i.body, width=' ' ) )
+        print( '{0}Assigned to{1}:{width}{2}'.format( BLUE, RESET, i.assignee, width=' ' ) )
+        print( '{0}Created by{1}:{width}{2}'.format( BLUE, RESET, i.user, width=2*' ' ) )
