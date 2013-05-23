@@ -168,6 +168,7 @@ if __name__ == '__main__':
 
     __check_path()
     repos_owner, repos_name = __get_repo().split( '/' )
+    repos_name = repos_name.rsplit( '.' )[0]
     user  = __get_user( args )
     token = __get_token()
     lookup= __parse_issue_string( args.issue )
