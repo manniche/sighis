@@ -137,7 +137,7 @@ def auth( user, tkn ):
 def search_issues( ghobj, repos_name, repos_owner, search_string ):
     """
     """
-    return ghobj.search_issues( repos_owner, repos_name, 'open', search_string, start_page=0)
+    return ghobj.search_issues( repos_owner, repos_name, 'open', search_string )
    
 def find_issues( ghobj, owner, repos, numbers ):
     """
