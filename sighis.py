@@ -181,7 +181,7 @@ if __name__ == '__main__':
     elif lookup[0] is 'range':
         issues = find_issues( ghobj, repos_owner, repos_name, lookup[1] )
     elif lookup[0] is 'string':
-        sys.exit( 'searching is currently not supported' )
+        #sys.exit( 'searching is currently not supported' )
         issues = search_issues( ghobj, repos_owner, repos_name, lookup[1] )
 
     print issues
