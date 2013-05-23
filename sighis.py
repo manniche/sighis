@@ -144,7 +144,9 @@ def find_issues( ghobj, owner, repos, numbers ):
     """
     issues = []
     for n in numbers:
-        issues.append( ghobj.issue( owner, repos, n ) )
+        i = ghobj.issue( owner, repos, n )
+        if i is not None:
+            issues.append( i )
 
     return issues
 
