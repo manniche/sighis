@@ -16,6 +16,7 @@ SImple GitHub ISsues - See README.md for detailed usage and prerequisites
 """
 
 import os, sys
+import io
 import re
 import github3 as gh
 
@@ -154,7 +155,6 @@ if __name__ == '__main__':
 
     import argparse    
     import ConfigParser
-    import io
     parser = argparse.ArgumentParser( description=prg_descr )
     parser.add_argument( '-u', dest='user', type=str, nargs='?',
                          help='GitHub user name. If not provided by github.user or $GITHUB_USER, use this to give the program your github name' )
