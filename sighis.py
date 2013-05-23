@@ -17,10 +17,37 @@ SImple GitHub ISsues - See README.md for detailed usage and prerequisites
 
 import os, sys
 import re
+import github3 as gh
+
+abs_path_to_config = '.git/config'
+
+def __check_path():
+    """
+    """
+    if not os.path.exists( abs_path_to_config ):
+        raise AssertionError( 'No git config file found at '+abs_path_to_config )
+
+def __get_repo():
+    """
+    """
+    with open( abs_path_to_config ) as gitconf:
+        conf = gitconf.read().replace( '\t', '' )
+        cp = ConfigParser.ConfigParser()
+        cp.readfp(io.BytesIO( conf ) )
+        try:
+            url = cp.get( 'remote "origin"', 'url' )
+            if url.startswith( 'git@' ):
+                return url.rsplit( ':' )[1]
+            elif url.startswith( 'https' ):
+                return url.rsplit( '.com/' )[1]
+            elif url.startswith( 'git://' ):
+                return url.rsplit( '.com/' )[1]
+        except ( ConfigParser.NoSectionError, ConfigParser.NoOptionError ) as e:
+            pass
 
 def __get_user( args ):
     user = None
-    with open( '.git/config' ) as gitconf:
+    with open( abs_path_to_config ) as gitconf:
         conf = gitconf.read().replace( '\t', '' )
         cp = ConfigParser.ConfigParser()
         cp.readfp(io.BytesIO( conf ) )
@@ -32,7 +59,7 @@ def __get_user( args ):
 
 def __get_token():
     token = None
-    with open( '.git/config' ) as gitconf:
+    with open( abs_path_to_config ) as gitconf:
         conf = gitconf.read().replace( '\t', '' )
         cp = ConfigParser.ConfigParser()
         cp.readfp(io.BytesIO( conf ) )
@@ -102,7 +129,10 @@ if __name__ == '__main__':
     parser.add_argument( dest='issue', action="store", type=str,
                          help='%(prog)s looks in the context of the current project. %(prog)s will try to interpret this argument as a number first, a search string second. Please refer to README.md for a more thorough explanation.' )
     args = parser.parse_args()
-    user = __get_user( args )
+
+    __check_path()
+    repos_owner, repos_name = __get_repo().split( '/' )
+    user  = __get_user( args )
     token = __get_token()
 
     if not user:
