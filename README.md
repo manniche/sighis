@@ -10,6 +10,8 @@ A python cli for github issues
 
 ## Usage ##
 
+### Setup ###
+
 Get an auth token from your github account and either put it in `$GITHUB_TOKEN` environment variable or store it in your `myproject/.git/config` under github.token:
 
 `git config github.token 1A2B3C4D5E6F7A8B9C0D`
@@ -20,7 +22,27 @@ sighis will look for the username of your github account with the following pref
 2. `$USER`
 3. `-u` parameter value to the program
 
-### Issue lookup heuristics ###
+### Working with sighis ###
+
+The general format of the program is
+
+`%prog command arg flags`
+
+where action is one of `show`, `search` or `edit`:
+
+`%prog edit [issuenumber] [--reopen|--close|--comment|--new] "[comment]"`
+
+`%prog search [issuenumber|issuenumber-issuenumber+n|issuenumber..issuenumber+n|searchstring]`
+
+`%prog show [issuenumber] [--commits|--compact]`
+
+At any time, issuing `-h` or `--help` will bring up the program help listing.
+
+## Notes on the inner workings of sighis ##
+
+If, at some point, `sighis` acts in a way counter-intuitive, the following tries to explain the rationale and inner workings of `sighis`.
+
+## Issue lookup heuristics ##
 
 sighis will try to interpret the positional argument given by the following heuristic:
 
