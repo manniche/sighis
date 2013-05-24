@@ -12,11 +12,11 @@ A python cli for github issues
 
 ### Setup ###
 
-Get an auth token from your github account and either put it in `$GITHUB_TOKEN` environment variable or store it in your `myproject/.git/config` under github.token:
+Get a _Personal API Access Token_ from your github account and either put it in `$GITHUB_TOKEN` environment variable or store it in your `myproject/.git/config` under github.token:
 
 `git config github.token 1A2B3C4D5E6F7A8B9C0D`
 
-sighis will look for the username of your github account with the following preferences:
+`sighis` will look for the username of your github account with the following preferences:
 
 1. `github.user` in `myproject/.git/config` 
 2. `$USER`
