@@ -1,11 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -*- mode: python -*-
-"""Python module for sighis
-
-Features:
-- commandline interface for working with github issues
-"""
 
 __author__ = 'Steen Manniche <steen@manniche.net>'
 __date__ = 'Tue May 21 22:16:49 2013'
@@ -13,6 +8,9 @@ __version__ = '$Revision:$'
 
 prg_descr = """
 SImple GitHub ISsues - See README.md for detailed usage and prerequisites
+
+Features:
+- commandline interface for working with github issues
 """
 
 import os, sys
@@ -121,21 +119,14 @@ def __parse_issue_string( issue_string ):
     if type( issue_string ) is  str:
         return ( 'string', issue_string )
 
-def auth( user, tkn ):
-    """Authenticates with github
-    
-    Arguments:
-    - `user`:
-    - `tkn`:
+def auth( tkn ):
+    """Authenticates with github using the provided token
     """
     ghlogin = gh.login( token=tkn )
-    #ghlogin = gh.login( username=user, password='immanuelkant' )
-    #ghlogin.check_authorization( ghlogin.token )
-    #print( dir( ghlogin ) )
     return ghlogin
 
 def search_issues( ghobj, repos_name, repos_owner, search_string ):
-    """
+    """Search for issues in the repository identified by `repos_name` using `search_string`
     """
     return ghobj.search_issues( repos_owner, repos_name, 'open', search_string )
    
@@ -172,7 +163,7 @@ if __name__ == '__main__':
     user  = __get_user( args )
     token = __get_token()
     lookup= __parse_issue_string( args.issue )
-    ghobj = auth( user, token )
+    ghobj = auth( token )
     
 
     issues = []
