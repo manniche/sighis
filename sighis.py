@@ -17,8 +17,15 @@ import os, sys
 import io
 import re
 import github3 as gh
+from github3.models import GitHubError
 
 abs_path_to_config = '.git/config'
+GREEN = '\033[92m'
+HEADER = '\033[95m'
+BLUE = '\033[94m'
+WARNING = '\033[93m'
+FAIL = '\033[91m'
+RESET = '\033[0m'
 
 def __check_path():
     """
@@ -59,7 +66,7 @@ def __get_user( args ):
     if not user:
         parser.print_help()
         sys.stderr.write('')
-        sys.exit( 'ERROR: no github username found, please refer to README.md, or try -u' )
+        sys.exit( '{0}ERROR:{1} no github username found, please refer to the README, or try -u'.format( RED, RESET ) )
         
     return user
 
@@ -79,7 +86,7 @@ def __get_token():
     if not token: 
         parser.print_help()
         sys.stderr.write('')
-        sys.exit( 'ERROR: no github token found, please refer to README.md' )
+        sys.exit( '{0}ERROR{1}: no github token found, please refer to README.md'.format( RED, RESET ) )
 
     return token
 
@@ -122,7 +129,11 @@ def __parse_issue_string( issue_string ):
 def auth( tkn ):
     """Authenticates with github using the provided token
     """
-    ghlogin = gh.login( token=tkn )
+    try:
+        ghlogin = gh.login( token=tkn )
+    except GitHubError, e:
+        sys.exit( '{0}ERROR{1}: when connecting to github: {2}'.format( RED, RESET, e ) )
+
     return ghlogin
 
 def search_issues( ghobj, repos_name, repos_owner, search_string ):
@@ -175,12 +186,6 @@ if __name__ == '__main__':
         #sys.exit( 'searching is currently not supported' )
         issues = search_issues( ghobj, repos_owner, repos_name, lookup[1] )
 
-    GREEN = '\033[92m'
-    HEADER = '\033[95m'
-    BLUE = '\033[94m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    RESET = '\033[0m'
     MINW = 6*' '
     for i in issues:
         issue = i
