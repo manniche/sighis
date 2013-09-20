@@ -112,6 +112,10 @@ def __parse_issue_string( issue_string ):
     ('string', '4.a')
     >>> __parse_issue_string( '4--a' )
     ('string', '4--a')
+    >>> __parse_issue_string( '..' )
+    ('string', '..')
+    >>> __parse_issue_string( 1 )
+    ('number', 1)
     
     """
     try:
